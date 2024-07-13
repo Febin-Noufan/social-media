@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/controller/signup/bloc/signup_bloc.dart';
+import 'package:flutter_application_1/views/screens/signin.dart';
 import 'package:flutter_application_1/views/screens/splash.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -17,20 +16,14 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
-
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _usernameController = TextEditingController();
-
   final TextEditingController _bioController = TextEditingController();
-
   File? _profileImage;
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       _profileImage = File(pickedFile!.path);
     });
@@ -63,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ));
           } else if (state is SignupErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Invalid username and password")),
+              SnackBar(content: Text(state.error)),
             );
           }
         },
@@ -77,9 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: CircleAvatar(
                     radius: 60,
                     backgroundColor: Colors.grey[200],
-                    backgroundImage: _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : null,
+                    backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
                     child: _profileImage == null
                         ? Icon(
                             Icons.camera_alt,
@@ -92,32 +83,28 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 50),
                 _buildTextField(_nameController, 'Name', Icons.person),
                 const SizedBox(height: 20),
-                _buildTextField(
-                    _usernameController, 'Username', Icons.alternate_email),
+                _buildTextField(_usernameController, 'Username', Icons.alternate_email),
                 const SizedBox(height: 20),
-                _buildTextField(_emailController, 'Email', Icons.email,
-                    inputType: TextInputType.emailAddress),
+                _buildTextField(_emailController, 'Email', Icons.email, inputType: TextInputType.emailAddress),
                 const SizedBox(height: 20),
-                _buildTextField(_passwordController, 'Password', Icons.lock,
-                    isPassword: true),
+                _buildTextField(_passwordController, 'Password', Icons.lock, isPassword: true),
                 const SizedBox(height: 20),
                 _buildTextField(_bioController, 'Bio', Icons.info, maxLines: 3),
-                const SizedBox(height: 60),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
                     BlocProvider.of<SignupBloc>(context).add(SignUpAdd(
-                        name: _nameController.text,
-                        bio: _bioController.text,
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                        profile: _profileImage,
-                        username: _usernameController.text));
+                      name: _nameController.text,
+                      bio: _bioController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      profile: _profileImage,
+                      username: _usernameController.text,
+                    ));
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.white,
-                    // primary: Colors.blue,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -127,6 +114,17 @@ class _SignupScreenState extends State<SignupScreen> {
                     style: TextStyle(fontSize: 18, color: blackColor),
                   ),
                 ),
+                SizedBox(height: 30,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Already have an account?",style: TextStyle(color: Colors.white),),
+                  TextButton(onPressed: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SigninScreen(),));
+
+                  }, child: Text("Login"))
+                ],
+              )
               ],
             ),
           ),
@@ -145,7 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
       obscureText: isPassword,
       keyboardType: inputType,
       maxLines: maxLines,
-      style: const TextStyle(color: whiteColor),
+      style: const TextStyle(color: Colors.white),
       cursorColor: whiteColor,
       decoration: InputDecoration(
         labelText: labelText,
@@ -163,8 +161,7 @@ class _SignupScreenState extends State<SignupScreen> {
           borderRadius: BorderRadius.circular(30),
           borderSide: const BorderSide(color: Colors.white),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       ),
     );
   }

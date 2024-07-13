@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_application_1/controller/signin/bloc/signin_bloc.dart';
 import 'package:flutter_application_1/controller/signup/bloc/signup_bloc.dart';
-import 'package:flutter_application_1/views/screens/signup.dart';
+import 'package:flutter_application_1/views/screens/signin.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,22 +16,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    return
-      BlocProvider(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
           create: (context) => SignupBloc(),
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-      
-      title: 'Flutter Firebase BLoC Auth',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+        ),
+        BlocProvider(
+          create: (context) => SigninBloc(),
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: '',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const SigninScreen(),
       ),
-     home: SignupScreen(),
-    ) ,
-        );
-    
-    
-    
+    );
   }
 }
