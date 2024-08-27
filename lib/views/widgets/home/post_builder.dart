@@ -42,7 +42,7 @@ class PostBuilderWidget extends StatelessWidget {
                   child: PostWidget(
                     postId: post["postId"],
                     commentsCount: post['commentsCount'] ?? 0,
-                    likesCount: post['likesCount'] ?? 0,
+                   likesCount : post['likesCount'] ?? 0,
                     postContent: postContent,
                     username: username,
                     postImageUrl: postImageUrl,
@@ -62,21 +62,25 @@ class PostBuilderWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShimmerLoading() {
-    return ListView.builder(
+
+
+Widget _buildShimmerLoading() {
+  return Padding(
+    padding: const EdgeInsets.all(15.0),
+    child: ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 6, // Number of shimmer items to display
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Row for avatar and username
+                // Header with profile picture and username
                 Row(
                   children: [
                     Container(
@@ -93,42 +97,68 @@ class PostBuilderWidget extends StatelessWidget {
                       height: 16.0,
                       color: Colors.grey[300],
                     ),
+                    const Spacer(),
+                    Container(
+                      width: 30.0,
+                      height: 16.0,
+                      color: Colors.grey[300],
+                    ),
                   ],
                 ),
-                const SizedBox(height: 16.0),
-                // Placeholder for post content
+                const SizedBox(height: 12.0),
+                // Placeholder for post image
                 Container(
                   width: double.infinity,
-                  height: 150.0,
+                  height: 200.0,
                   color: Colors.grey[300],
                 ),
-                const SizedBox(height: 16.0),
-                // Row for like, comment, and share placeholders
+                const SizedBox(height: 12.0),
+                // Row for like, comment, and share buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 50.0,
-                      height: 16.0,
-                      color: Colors.grey[300],
+                    Row(
+                      children: [
+                        Container(
+                          width: 24.0,
+                          height: 24.0,
+                          color: Colors.grey[300],
+                        ),
+                        const SizedBox(width: 16.0),
+                        Container(
+                          width: 24.0,
+                          height: 24.0,
+                          color: Colors.grey[300],
+                        ),
+                      ],
                     ),
                     Container(
-                      width: 50.0,
-                      height: 16.0,
-                      color: Colors.grey[300],
-                    ),
-                    Container(
-                      width: 50.0,
-                      height: 16.0,
+                      width: 24.0,
+                      height: 24.0,
                       color: Colors.grey[300],
                     ),
                   ],
+                ),
+                const SizedBox(height: 12.0),
+                // Placeholder for post description
+                Container(
+                  width: double.infinity,
+                  height: 16.0,
+                  color: Colors.grey[300],
+                ),
+                const SizedBox(height: 4.0),
+                Container(
+                  width: 100.0,
+                  height: 16.0,
+                  color: Colors.grey[300],
                 ),
               ],
             ),
           ),
         );
       },
-    );
-  }
+    ),
+  );
+}
+
 }

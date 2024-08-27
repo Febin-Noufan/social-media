@@ -35,4 +35,33 @@ class PostAddServiece {
       throw e;
     }
   }
+
+  Future<void> likePost(String postId, String userId) async {
+  final postRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+  final userLikeRef = FirebaseFirestore.instance.collection('post_likes').doc('$postId-$userId');
+  
+  try {
+    final userLikeSnapshot = await userLikeRef.get();
+    if (userLikeSnapshot.exists) {
+      // User has already liked the post, so unlike it
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final postSnapshot = await transaction.get(postRef);
+        final likesCount = postSnapshot.data()?['likesCount'] ?? 0;
+        transaction.update(postRef, {'likesCount': likesCount - 1});
+        transaction.delete(userLikeRef);
+      });
+    } else {
+      // User has not liked the post, so like it
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final postSnapshot = await transaction.get(postRef);
+        final likesCount = postSnapshot.data()?['likesCount'] ?? 0;
+        transaction.update(postRef, {'likesCount': likesCount + 1});
+        transaction.set(userLikeRef, {'userId': userId});
+      });
+    }
+  } catch (e) {
+    print("Failed to toggle like: $e");
+  }
+}
+
 }

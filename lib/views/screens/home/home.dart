@@ -3,6 +3,8 @@ import 'package:flutter_application_1/views/widgets/home/home_app_bar.dart';
 import 'package:flutter_application_1/views/widgets/home/post_builder.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const SafeArea(

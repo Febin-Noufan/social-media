@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/controller/addpost/serviese/post_service.dart';
 
 class PostWidget extends StatelessWidget {
   final String postId;
@@ -63,14 +65,6 @@ class PostWidget extends StatelessWidget {
                           fontSize: 16,
                         ),
                       ),
-                      // Uncomment if you need to show the timestamp again
-                      // Text(
-                      //   timestamp,
-                      //   style: TextStyle(
-                      //     color: Colors.grey[500],
-                      //     fontSize: 13,
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -111,11 +105,14 @@ class PostWidget extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.favorite_border,
                         color: Colors.redAccent,
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        // Call the likePost function
+                        await  PostAddServiece().likePost(postId, FirebaseAuth.instance.currentUser!.uid); 
+                      },
                     ),
                     Text('$likesCount'),
                   ],
@@ -123,7 +120,7 @@ class PostWidget extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.comment_outlined,
                         color: Colors.blueAccent,
                       ),
@@ -133,7 +130,7 @@ class PostWidget extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.share_outlined,
                     color: Colors.greenAccent,
                   ),
