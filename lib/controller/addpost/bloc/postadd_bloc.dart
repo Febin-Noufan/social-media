@@ -21,7 +21,9 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
           state.text,
           state.image!,
         );
+        emit(AddPostState.initial());
       }
+    
 
       emit(state.copyWith(isSubmitting: false, isSuccess: true));
     });

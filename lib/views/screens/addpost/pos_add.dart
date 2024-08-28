@@ -6,7 +6,6 @@ import 'package:flutter_application_1/controller/addpost/bloc/postadd_state.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class AddPostPage extends StatelessWidget {
   const AddPostPage({super.key});
 
@@ -16,7 +15,8 @@ class AddPostPage extends StatelessWidget {
       create: (context) => AddPostBloc(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Create a New Post', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text('Create a New Post',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -26,16 +26,16 @@ class AddPostPage extends StatelessWidget {
               ),
             ),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {},
-            ),
-          ],
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(Icons.notifications),
+          //     onPressed: () {},
+          //   ),
+          //   IconButton(
+          //     icon: const Icon(Icons.settings),
+          //     onPressed: () {},
+          //   ),
+          // ],
         ),
         body: BlocListener<AddPostBloc, AddPostState>(
           listener: (context, state) {
@@ -56,6 +56,9 @@ class AddPostPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(
+                      height: 70,
+                    ),
                     Stack(
                       children: [
                         Card(
@@ -74,7 +77,9 @@ class AddPostPage extends StatelessWidget {
                               children: [
                                 TextField(
                                   onChanged: (text) {
-                                    context.read<AddPostBloc>().add(TextChanged(text: text));
+                                    context
+                                        .read<AddPostBloc>()
+                                        .add(TextChanged(text: text));
                                   },
                                   maxLines: 5,
                                   decoration: const InputDecoration(
@@ -86,11 +91,13 @@ class AddPostPage extends StatelessWidget {
                                 const SizedBox(height: 20),
                                 GestureDetector(
                                   onTap: () async {
-                                    final  image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                                    if (image !=null) {
-                                       context.read<AddPostBloc>().add(ImagePicked(image: File(image.path)));
+                                    final image = await ImagePicker()
+                                        .pickImage(source: ImageSource.gallery);
+                                    if (image != null) {
+                                      // ignore: use_build_context_synchronously
+                                      context.read<AddPostBloc>().add(
+                                          ImagePicked(image: File(image.path)));
                                     }
-                                   
                                   },
                                   child: AnimatedContainer(
                                     duration: const Duration(milliseconds: 300),
@@ -98,10 +105,12 @@ class AddPostPage extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       color: Colors.grey[200],
                                       borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.grey[400]!),
+                                      border:
+                                          Border.all(color: Colors.grey[400]!),
                                       image: state.image != null
                                           ? DecorationImage(
-                                              image: FileImage(File(state.image!.path)),
+                                              image: FileImage(
+                                                  File(state.image!.path)),
                                               fit: BoxFit.cover,
                                             )
                                           : null,
@@ -109,15 +118,19 @@ class AddPostPage extends StatelessWidget {
                                     child: state.image == null
                                         ? const Center(
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                Icon(Icons.add_a_photo, color: Colors.grey, size: 50),
+                                                Icon(Icons.add_a_photo,
+                                                    color: Colors.grey,
+                                                    size: 50),
                                                 SizedBox(height: 10),
                                                 Text('Add an Image',
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold)),
+                                                        fontWeight:
+                                                            FontWeight.bold)),
                                               ],
                                             ),
                                           )
@@ -132,12 +145,15 @@ class AddPostPage extends StatelessWidget {
                           top: 10,
                           right: 10,
                           child: IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.deepPurple),
+                            icon: const Icon(Icons.edit,
+                                color: Colors.deepPurple),
                             onPressed: () async {
-                              final 
-                               image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                              final image = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
                               // ignore: use_build_context_synchronously
-                              context.read<AddPostBloc>().add(ImagePicked(image: File(image!.path)));
+                              context
+                                  .read<AddPostBloc>()
+                                  .add(ImagePicked(image: File(image!.path)));
                             },
                           ),
                         ),
@@ -148,20 +164,24 @@ class AddPostPage extends StatelessWidget {
                       elevation: 3,
                       margin: const EdgeInsets.symmetric(vertical: 10),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.location_on, color: Colors.deepPurple),
+                              icon: const Icon(Icons.location_on,
+                                  color: Colors.deepPurple),
                               onPressed: () {},
                             ),
                             IconButton(
-                              icon: const Icon(Icons.tag, color: Colors.deepPurple),
+                              icon: const Icon(Icons.tag,
+                                  color: Colors.deepPurple),
                               onPressed: () {},
                             ),
                             IconButton(
-                              icon: const Icon(Icons.people, color: Colors.deepPurple),
+                              icon: const Icon(Icons.people,
+                                  color: Colors.deepPurple),
                               onPressed: () {},
                             ),
                           ],
@@ -177,7 +197,9 @@ class AddPostPage extends StatelessWidget {
         floatingActionButton: BlocBuilder<AddPostBloc, AddPostState>(
           builder: (context, state) {
             return FloatingActionButton(
-              onPressed: state.isSubmitting ? null : () => context.read<AddPostBloc>().add(SubmitPost()),
+              onPressed: state.isSubmitting
+                  ? null
+                  : () => context.read<AddPostBloc>().add(SubmitPost()),
               backgroundColor: Colors.deepPurple,
               child: state.isSubmitting
                   ? const CircularProgressIndicator(color: Colors.white)

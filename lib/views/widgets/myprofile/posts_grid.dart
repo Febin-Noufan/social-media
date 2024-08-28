@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_1/views/widgets/myprofile/post_details.dart';
 
 class PostGridWidget extends StatelessWidget {
   const PostGridWidget({super.key});
@@ -39,14 +40,19 @@ class PostGridWidget extends StatelessWidget {
               final post = posts[index].data() as Map<String, dynamic>;
               final imageUrl = post['image'] ?? '';
 
-              return Container(
-                color: Colors.grey[850],
-                child: imageUrl.isNotEmpty
-                    ? Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                      )
-                    : const Center(child: Icon(Icons.image, color: Colors.white)),
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => PostDetailsPage(post: post),));
+                },
+                child: Container(
+                  color: Colors.grey[850],
+                  child: imageUrl.isNotEmpty
+                      ? Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                        )
+                      : const Center(child: Icon(Icons.image, color: Colors.white)),
+                ),
               );
             },
           );

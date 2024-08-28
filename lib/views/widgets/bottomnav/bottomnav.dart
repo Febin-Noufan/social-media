@@ -19,10 +19,10 @@ class _BottomNavigatorExampleState extends State<BottomNavigatorExample> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = <Widget>[
-    HomeScreen(),
-    GeminiPage(),
+    const HomeScreen(),
+    const GeminiPage(),
    // const Center(child: Text('Search')),
-     AddPostPage(),
+     const AddPostPage(),
     //const Center(child: Text('Post')),
     //const Center(child: Text('Reels')),
    const MyProfileScreen()
@@ -51,9 +51,9 @@ class _BottomNavigatorExampleState extends State<BottomNavigatorExample> {
                       color: _selectedIndex == 0 ? Colors.blue : Colors.white)),
             ),
             FlashyTabBarItem(
-              icon: Icon(Icons.search,
+              icon: Icon(Icons.chat_bubble_outline,
                   color: _selectedIndex == 1 ? Colors.blue : Colors.white),
-              title: Text('Search',
+              title: Text('ChatBot',
                   style: TextStyle(
                       color: _selectedIndex == 1 ? Colors.blue : Colors.white)),
             ),

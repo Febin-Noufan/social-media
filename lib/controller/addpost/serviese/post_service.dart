@@ -21,7 +21,6 @@ class PostAddServiece {
       await db
           .collection("posts")
           .doc("${uid}_${DateTime.now().millisecondsSinceEpoch}")
-         
           .set({
         "id": uid,
         "description": description,
@@ -31,37 +30,60 @@ class PostAddServiece {
         "timestamp": "${DateTime.timestamp()}",
       });
     } catch (e) {
-      print("Error adding post: $e");
       throw e;
     }
   }
 
   Future<void> likePost(String postId, String userId) async {
-  final postRef = FirebaseFirestore.instance.collection('posts').doc(postId);
-  final userLikeRef = FirebaseFirestore.instance.collection('post_likes').doc('$postId-$userId');
-  
-  try {
-    final userLikeSnapshot = await userLikeRef.get();
-    if (userLikeSnapshot.exists) {
-      // User has already liked the post, so unlike it
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        final postSnapshot = await transaction.get(postRef);
-        final likesCount = postSnapshot.data()?['likesCount'] ?? 0;
-        transaction.update(postRef, {'likesCount': likesCount - 1});
-        transaction.delete(userLikeRef);
-      });
-    } else {
-      // User has not liked the post, so like it
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        final postSnapshot = await transaction.get(postRef);
-        final likesCount = postSnapshot.data()?['likesCount'] ?? 0;
-        transaction.update(postRef, {'likesCount': likesCount + 1});
-        transaction.set(userLikeRef, {'userId': userId});
-      });
-    }
-  } catch (e) {
-    print("Failed to toggle like: $e");
-  }
-}
+    final postRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+    final userLikeRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection("post_likes")
+        .doc(userId);
 
+    try {
+      final userLikeSnapshot = await userLikeRef.get();
+      if (userLikeSnapshot.exists) {
+        // User has already liked the post, so unlike it
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          final postSnapshot = await transaction.get(postRef);
+          final likesCount = postSnapshot.data()?['likesCount'] ?? 0;
+          transaction.update(postRef, {'likesCount': likesCount - 1});
+          transaction.delete(userLikeRef);
+        });
+      } else {
+        // User has not liked the post, so like it
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          final postSnapshot = await transaction.get(postRef);
+          final likesCount = postSnapshot.data()?['likesCount'] ?? 0;
+          transaction.update(postRef, {'likesCount': likesCount + 1});
+          transaction.set(userLikeRef, {'userId': userId});
+        });
+      }
+    } catch (e) {
+      print("Failed to toggle like: $e");
+    }
+  }
+
+  Future<bool> hasCurrentUserLikedPost(
+      String postId, String currentUserId) async {
+    final postLikesRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('post_likes')
+        .doc(currentUserId); // Check for the current user's document
+
+    try {
+      // Fetch the document for the current user
+      final docSnapshot = await postLikesRef.get();
+
+      // Return true if the document exists, indicating the user liked the post
+      return docSnapshot.exists;
+    } catch (e) {
+      // Handle any errors, e.g., network issues
+      print('Error fetching like status: $e');
+      return false; // Assume the user has not liked the post in case of error
+    }
+  }
 }

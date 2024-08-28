@@ -62,8 +62,9 @@ class MyProfileScreen extends StatelessWidget {
                       ProfileBioWidget(
                           name: name, username: username, bio: bio),
                       const SizedBox(height: 20),
+                     // Divider(thickness: 2,color: Colors.white,),
                       const ProfilePageFollowCount(),
-                      const SizedBox(height: 20),
+                       SizedBox(height: 20),
                       const TabBarWidgetProfile(),
                     ],
                   ),

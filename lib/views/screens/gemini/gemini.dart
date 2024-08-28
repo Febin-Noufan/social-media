@@ -43,7 +43,7 @@ class _HomePageState extends State<GeminiPage> {
             backgroundColor: Colors.transparent,
             centerTitle: true,
             title: const Text(
-              "Gemini",
+              "ChatBot",
               style: TextStyle(fontSize: 30, color: Colors.white),
             ),
             elevation: 0,

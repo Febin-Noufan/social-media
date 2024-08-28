@@ -28,12 +28,13 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-              const BottomNavigatorExample(title: "hg",)
+              builder: (context) => const BottomNavigatorExample(
+                    title: "hg",
+                  )
               //  const BottomNavigatorExample(
               //       title: "zhfsdyg",
               //     )
-                  ),
+              ),
         );
       } else {
         Navigator.pushReplacement(
@@ -53,19 +54,19 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.front_hand_sharp,
+              Icons.social_distance,
               size: 100,
               color: Colors.white,
             ),
             SizedBox(height: 20),
-            Text(
-              'Splash Screen',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            // Text(
+            //   'Splash Screen',
+            //   style: TextStyle(
+            //     fontSize: 24,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            // ),
           ],
         ),
       ),

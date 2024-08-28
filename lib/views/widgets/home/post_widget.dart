@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/addpost/serviese/post_service.dart';
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   final String postId;
   final String username;
   final String userAvatarUrl;
@@ -25,6 +26,43 @@ class PostWidget extends StatelessWidget {
   });
 
   @override
+  _PostWidgetState createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
+  bool _isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfLiked();
+  }
+
+  Future<void> _checkIfLiked() async {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final isLiked = await hasCurrentUserLikedPost(widget.postId, currentUserId);
+    setState(() {
+      _isLiked = isLiked;
+    });
+  }
+
+  Future<bool> hasCurrentUserLikedPost(String postId, String currentUserId) async {
+    final postLikesRef = FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('post_likes')
+        .doc(currentUserId);
+
+    try {
+      final docSnapshot = await postLikesRef.get();
+      return docSnapshot.exists;
+    } catch (e) {
+      print('Error fetching like status: $e');
+      return false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -42,11 +80,11 @@ class PostWidget extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 25,
-                  backgroundImage: NetworkImage(userAvatarUrl),
+                  backgroundImage: NetworkImage(widget.userAvatarUrl),
                   child: ClipOval(
                     child: FadeInImage.assetNetwork(
                       placeholder: 'assets/avargar.png',
-                      image: userAvatarUrl,
+                      image: widget.userAvatarUrl,
                       fit: BoxFit.cover,
                       width: 50,
                       height: 50,
@@ -59,7 +97,7 @@ class PostWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        username,
+                        widget.username,
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -68,20 +106,16 @@ class PostWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.more_vert, color: Colors.grey),
-                  onPressed: () {},
-                ),
               ],
             ),
             const SizedBox(height: 10),
             // Post Image with Placeholder
-            if (postImageUrl.isNotEmpty)
+            if (widget.postImageUrl.isNotEmpty)
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: FadeInImage.assetNetwork(
                   placeholder: 'assets/loading.jpg',
-                  image: postImageUrl,
+                  image: widget.postImageUrl,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 200,
@@ -90,7 +124,7 @@ class PostWidget extends StatelessWidget {
             const SizedBox(height: 10),
             // Post Content
             Text(
-              postContent,
+              widget.postContent,
               style: const TextStyle(
                 fontSize: 15,
                 height: 1.5,
@@ -105,16 +139,19 @@ class PostWidget extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(
-                        Icons.favorite_border,
+                      icon: Icon(
+                        _isLiked ? Icons.favorite : Icons.favorite_border,
                         color: Colors.redAccent,
                       ),
                       onPressed: () async {
-                        // Call the likePost function
-                        await  PostAddServiece().likePost(postId, FirebaseAuth.instance.currentUser!.uid); 
+                        final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+                        await PostAddServiece().likePost(widget.postId, currentUserId);
+                        setState(() {
+                          _isLiked = !_isLiked;
+                        });
                       },
                     ),
-                    Text('$likesCount'),
+                    Text('${widget.likesCount}'),
                   ],
                 ),
                 Row(
@@ -126,13 +163,13 @@ class PostWidget extends StatelessWidget {
                       ),
                       onPressed: () {},
                     ),
-                    Text('$commentsCount'),
+                    Text('${widget.commentsCount}'),
                   ],
                 ),
                 IconButton(
                   icon: const Icon(
-                    Icons.share_outlined,
-                    color: Colors.greenAccent,
+                    Icons.more_vert_rounded,
+                    color: Colors.black,
                   ),
                   onPressed: () {},
                 ),

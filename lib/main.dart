@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_1/const/const.dart';
+import 'package:flutter_application_1/controller/home/bloc/bloc/posts_bloc.dart';
 import 'package:flutter_application_1/controller/signin/bloc/signin_bloc.dart';
 import 'package:flutter_application_1/controller/signup/bloc/signup_bloc.dart';
 import 'package:flutter_application_1/firebase_options.dart';
@@ -29,7 +30,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => SigninBloc(),
-        )
+        ),
+          BlocProvider<PostBloc>(
+          create: (context) => PostBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

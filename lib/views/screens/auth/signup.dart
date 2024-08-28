@@ -4,6 +4,7 @@ import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/controller/signup/bloc/signup_bloc.dart';
 import 'package:flutter_application_1/views/screens/auth/signin.dart';
 import 'package:flutter_application_1/views/screens/home/home.dart';
+import 'package:flutter_application_1/views/widgets/bottomnav/bottomnav.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -56,7 +57,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => HomeScreen(),
+                builder: (context) => BottomNavigatorExample(title: ""),
               ),
             );
           } else if (state is SignupErrorState) {
